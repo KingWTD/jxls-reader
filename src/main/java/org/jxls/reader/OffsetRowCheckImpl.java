@@ -13,7 +13,7 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
 
     List<OffsetCellCheck> cellChecks = new ArrayList<OffsetCellCheck>();
     int offset;
-
+    String operator;
 
     public OffsetRowCheckImpl() {
     }
@@ -34,6 +34,14 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
         this.offset = offset;
     }
 
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
     public List getCellChecks() {
         return cellChecks;
     }
@@ -46,12 +54,21 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
         if( cellChecks.isEmpty() ){
             return isRowEmpty( row );
         }
-        for (OffsetCellCheck offsetCellCheck : cellChecks) {
-            if (!offsetCellCheck.isCheckSuccessful(row)) {
-                return false;
+        if (LogicalOperator.isAny(operator)) {
+            for (OffsetCellCheck offsetCellCheck : cellChecks) {
+                if (offsetCellCheck.isCheckSuccessful(row)) {
+                    return true;
+                }
             }
+            return false;
+        } else {
+            for (OffsetCellCheck offsetCellCheck : cellChecks) {
+                if (!offsetCellCheck.isCheckSuccessful(row)) {
+                    return false;
+                }
+            }
+            return true;
         }
-        return true;
     }
 
     public boolean isCheckSuccessful(XLSRowCursor cursor) {
@@ -69,12 +86,21 @@ public class OffsetRowCheckImpl implements OffsetRowCheck {
         if( cellChecks.isEmpty() ){
             return true;
         }
-        for (OffsetCellCheck offsetCellCheck : cellChecks) {
-            if (!isCellCheckEmpty(offsetCellCheck)) {
-                return false;
+        if (LogicalOperator.isAny(operator)) {
+            for (OffsetCellCheck offsetCellCheck : cellChecks) {
+                if (isCellCheckEmpty(offsetCellCheck)) {
+                    return true;
+                }
             }
+            return false;
+        } else {
+            for (OffsetCellCheck offsetCellCheck : cellChecks) {
+                if (!isCellCheckEmpty(offsetCellCheck)) {
+                    return false;
+                }
+            }
+            return true;
         }
-        return true;
     }
 
     private boolean isCellCheckEmpty(OffsetCellCheck cellCheck) {

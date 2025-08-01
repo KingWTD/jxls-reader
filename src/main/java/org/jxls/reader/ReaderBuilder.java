@@ -21,7 +21,6 @@ public class ReaderBuilder {
     boolean lastSheetReader = false;
     SectionCheck currentSectionCheck;
     OffsetRowCheck currentRowCheck;
-    
 
 
     public static XLSReader buildFromXML(InputStream xmlStream) throws IOException, SAXException {
@@ -31,8 +30,21 @@ public class ReaderBuilder {
         digester.addObjectCreate("workbook/worksheet", "org.jxls.reader.XLSSheetReaderImpl");
         digester.addSetProperties("workbook/worksheet", "name", "sheetName");
         digester.addSetProperties("workbook/worksheet", "idx", "sheetIdx");
-//        digester.addSetProperty("workbook/worksheet", "sheetName", "name");
+        digester.addSetProperties("workbook/worksheet");
         digester.addSetNext("workbook/worksheet", "addSheetReader");
+        digester.addObjectCreate("*/worksheet/matchescondition", "org.jxls.reader.SimpleSectionCheck");
+        digester.addSetNext("*/worksheet/matchescondition", "setMatchesCondition");
+        digester.addObjectCreate("*/matchescondition/rowcheck", "org.jxls.reader.OffsetRowCheckImpl");
+        digester.addSetProperties("*/matchescondition/rowcheck");
+        digester.addSetNext("*/matchescondition/rowcheck", "addRowCheck");
+        digester.addObjectCreate("*/ifsegment", "org.jxls.reader.IfSegmentBlockReader");
+        digester.addSetProperties("*/ifsegment");
+        digester.addSetNext("*/ifsegment", "addBlockReader");
+        digester.addObjectCreate("*/ifsegment/ifsegmentcondition", "org.jxls.reader.SimpleSectionCheck");
+        digester.addSetNext("*/ifsegment/ifsegmentcondition", "setIfSegmentCondition");
+        digester.addObjectCreate("*/ifsegmentcondition/rowcheck", "org.jxls.reader.OffsetRowCheckImpl");
+        digester.addSetProperties("*/ifsegmentcondition/rowcheck");
+        digester.addSetNext("*/ifsegmentcondition/rowcheck", "addRowCheck");
         digester.addObjectCreate("*/loop", "org.jxls.reader.XLSForEachBlockReaderImpl");
         digester.addSetProperties("*/loop");
         digester.addSetNext("*/loop", "addBlockReader");

@@ -28,6 +28,9 @@ public interface XLSSheetReader {
     int getSheetIdx();
     void setSheetIdx(int idx);
 
+    boolean isMultiSheet();
+    boolean matchesSheet(Sheet sheet);
+
 	void setConvertUtilsBeanProvider(ConvertUtilsBeanProvider convertUtilsBean);
 
 }

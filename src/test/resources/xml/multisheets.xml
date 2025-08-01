@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbook>
+    <worksheet multiSheet="true" items="departments" var="department" varType="org.jxls.reader.sample.Department">
+        <!-- 
+        <matchescondition>
+            <rowcheck offset="0">
+                <cellcheck offset="1">IT</cellcheck>
+            </rowcheck>
+        </matchescondition>
+         -->
+        <section startRow="0" endRow="6">
+            <mapping row="0" col="1">department.name</mapping>
+            <mapping row="3" col="0">department.chief.name</mapping>
+            <mapping row="3" col="1">department.chief.age</mapping>
+            <mapping row="3" col="2">department.chief.payment</mapping>
+            <mapping row="3" col="3">department.chief.bonus</mapping>
+        </section>
+        <loop items="department.staff" var="employee" varType="org.jxls.reader.sample.Employee">
+            <section startRow="0" endRow="0">
+                <mapping row="0" col="0">employee.name</mapping>
+                <mapping row="0" col="1">employee.age</mapping>
+                <mapping row="0" col="2">employee.payment</mapping>
+                <mapping row="0" col="3">employee.bonus</mapping>
+            </section>
+            <loopbreakcondition>
+                <rowcheck offset="0">
+                    <cellcheck offset="0">Employee Payment Totals:</cellcheck>
+                </rowcheck>
+            </loopbreakcondition>
+        </loop>
+        <section startRow="0" endRow="1" />
+        <ifsegment>
+            <ifsegmentcondition>
+                <rowcheck offset="1">
+                    <cellcheck offset="0">Employees</cellcheck>
+                </rowcheck>
+            </ifsegmentcondition>
+            <section startRow="0" endRow="2" />
+            <loop items="department.staff" var="employee" varType="org.jxls.reader.sample.Employee">
+                <section startRow="0" endRow="0">
+                    <mapping row="0" col="0">employee.name</mapping>
+                    <mapping row="0" col="1">employee.age</mapping>
+                    <mapping row="0" col="2">employee.payment</mapping>
+                    <mapping row="0" col="3">employee.bonus</mapping>
+                </section>
+                <loopbreakcondition>
+                    <rowcheck offset="0">
+                        <cellcheck offset="0">Employee Payment Totals:</cellcheck>
+                    </rowcheck>
+                </loopbreakcondition>
+            </loop>
+        </ifsegment>
+    </worksheet>
+</workbook>

@@ -122,6 +122,4 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
         return varType;
     }
 
-	
-
 }

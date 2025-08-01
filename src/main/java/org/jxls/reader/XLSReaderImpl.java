@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.logging.Log;
@@ -23,7 +24,7 @@ public class XLSReaderImpl implements XLSReader{
 
     Map<String, XLSSheetReader> sheetReaders = new HashMap<String, XLSSheetReader>();
     Map<Integer, XLSSheetReader> sheetReadersByIdx = new HashMap<Integer, XLSSheetReader>();
-
+    Map<Predicate<Sheet>, XLSSheetReader> multiSheetReaders = new HashMap<Predicate<Sheet>, XLSSheetReader>();
 
     XLSReadStatus readStatus = new XLSReadStatus();
 
@@ -56,9 +57,15 @@ public class XLSReaderImpl implements XLSReader{
         } else if(sheetReadersByIdx.containsKey(sheetNo)){
             sheetReader = sheetReadersByIdx.get(sheetNo);
             return readSheet(sheetReader, sheet, sheetName, beans);
-        } else{
-            return null;
+        } else if(!multiSheetReaders.isEmpty()){
+            for(Predicate<Sheet> condition : multiSheetReaders.keySet()){
+                if(condition.test(sheet)){
+                    sheetReader = multiSheetReaders.get(condition);
+                    return readSheet(sheetReader, sheet, sheetName, beans);
+                }
+            }
         }
+        return null;
     }
 
     private XLSReadStatus readSheet(XLSSheetReader sheetReader, Sheet sheet, String sheetName, Map beans){
@@ -88,11 +95,28 @@ public class XLSReaderImpl implements XLSReader{
         reader.setConvertUtilsBeanProvider( getConvertUtilsBeanProvider() );
     }
 
+    public void addSheetReader(Predicate<Sheet> condition, XLSSheetReader reader){
+        multiSheetReaders.put(condition, reader);
+        reader.setConvertUtilsBeanProvider( getConvertUtilsBeanProvider() );
+    }
+
     public void addSheetReader(XLSSheetReader reader){
-        addSheetReader(reader.getSheetName(), reader);
-        if( reader.getSheetIdx() >= 0 ){
-            addSheetReader(reader.getSheetIdx(), reader);
+        if(reader.isMultiSheet()){
+            addSheetReader(reader::matchesSheet, reader);
+        } else {
+            addSheetReader(reader.getSheetName(), reader);
+            if( reader.getSheetIdx() >= 0 ){
+                addSheetReader(reader.getSheetIdx(), reader);
+            }
         }
+    }
+
+    public Map getMultiSheetReaders() {
+        return multiSheetReaders;
+    }
+
+    public void setMultiSheetReaders(Map sheetReaders){
+        multiSheetReaders = sheetReaders;
     }
 
     public void setSheetReaders(Map sheetReaders){
