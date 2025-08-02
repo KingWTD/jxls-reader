@@ -133,6 +133,7 @@ public class ReaderConfig {
         converterUtilsBean.register( floatConverter, Float.class);
         converterUtilsBean.register( characterConverter, Character.TYPE);
         converterUtilsBean.register( characterConverter, Character.class);
+        converterUtilsBean.register( new StringEnumConverter(), String.class);
         converterUtilsBean.register( new DateConverter(), java.util.Date.class);
         return converterUtilsBean;
 	}
