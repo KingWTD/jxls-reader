@@ -135,11 +135,13 @@ public class ReaderBuilder {
         currentRowCheck.addCellCheck( cellCheck );
         return this;
     }
-    // todo:
+
+    // TODO:
     public ReaderBuilder addSimpleBlockReaderToParent(){
         return this;
     }
-    // todo:
+
+    // TODO:
     public ReaderBuilder addLoopBlockReaderToParent(){
         return this;
     }

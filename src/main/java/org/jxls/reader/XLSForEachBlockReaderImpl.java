@@ -19,7 +19,7 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
     String items;
     String var;
     Class varType;
-    List innerBlockReaders = new ArrayList();
+    List<XLSBlockReader> innerBlockReaders = new ArrayList<XLSBlockReader>();
 
     SectionCheck loopBreakCheck;
 
@@ -74,9 +74,8 @@ public class XLSForEachBlockReaderImpl extends BaseBlockReader implements XLSLoo
     }
 
     private void readInnerBlocks(XLSRowCursor cursor, Map beans) {
-        for (Object innerBlockReader : innerBlockReaders) {
-            XLSBlockReader xlsBlockReader = (XLSBlockReader) innerBlockReader;
-            readStatus.mergeReadStatus(xlsBlockReader.read(cursor, beans));
+        for (XLSBlockReader innerBlockReader : innerBlockReaders) {
+            readStatus.mergeReadStatus(innerBlockReader.read(cursor, beans));
             cursor.moveForward();
         }
     }

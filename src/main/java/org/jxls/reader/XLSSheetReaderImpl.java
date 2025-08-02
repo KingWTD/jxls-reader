@@ -40,8 +40,8 @@ public class XLSSheetReaderImpl implements XLSSheetReader {
             createNewCollectionItem(itemsCollection, beans);
         }
         XLSRowCursor cursor = new XLSRowCursorImpl( sheetName, sheet );
-        for (XLSBlockReader blockReader1 : blockReaders) {
-            readStatus.mergeReadStatus(blockReader1.read(cursor, beans));
+        for (XLSBlockReader blockReader : blockReaders) {
+            readStatus.mergeReadStatus(blockReader.read(cursor, beans));
             cursor.moveForward();
         }
         return readStatus;

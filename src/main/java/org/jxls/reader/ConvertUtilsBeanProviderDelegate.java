@@ -10,11 +10,11 @@ public class ConvertUtilsBeanProviderDelegate implements ConvertUtilsBeanProvide
 		
 	}
 	
-	public ConvertUtilsBeanProviderDelegate(final ConvertUtilsBean convertUtilsBean2) {
+	public ConvertUtilsBeanProviderDelegate(final ConvertUtilsBean convertUtilsBean) {
 		this.delegate = new ConvertUtilsBeanProvider() {
 			@Override
 			public ConvertUtilsBean getConvertUtilsBean() {
-				return convertUtilsBean2;
+				return convertUtilsBean;
 			}
 		};
 	}
@@ -30,7 +30,7 @@ public class ConvertUtilsBeanProviderDelegate implements ConvertUtilsBeanProvide
 		return result;
 	}
 	
-	public void setDelegate( ConvertUtilsBeanProvider convertUtilsBean2){
-		delegate = convertUtilsBean2;
+	public void setDelegate( ConvertUtilsBeanProvider convertUtilsBean){
+		delegate = convertUtilsBean;
 	}
 }
